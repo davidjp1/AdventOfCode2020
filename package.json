@@ -1,0 +1,36 @@
+{
+  "name": "adventofcode2020",
+  "version": "1.0.0",
+  "description": "Advent of Code 2020 Solutions",
+  "main": "index.ts",
+  "scripts": {
+    "build": "npm run clean && tsc && npm run copyResources",
+    "start": "npm run build && node build/index.js",
+    "lint": "eslint . --ext .ts",
+    "clean": "rimraf ./build",
+    "copyResources": "copyfiles -u 1 ./src/**/*.txt build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidjp1/AdventOfCode2020.git"
+  },
+  "keywords": [
+    "AdventOfCode"
+  ],
+  "author": "David Powell",
+  "homepage": "https://github.com/davidjp1/AdventOfCode2020#readme",
+  "dependencies": {
+    "@types/node": "^14.14.10",
+    "@typescript-eslint/parser": "^4.9.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.1.2"
+  },
+  "types": "*.ts",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "copyfiles": "^2.4.1",
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
