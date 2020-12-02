@@ -1,4 +1,4 @@
-const run = (input: string) => {
+const run = (input: string): number  => {
   const inputArr = input.split('\n').map(a => parseInt(a));
   // A very trivial and slow solution to the problem (filters provide a slight optimisation)
   for (const i of inputArr.filter(a => a < 2020)) {
@@ -10,6 +10,7 @@ const run = (input: string) => {
       }
     }
   }
+  throw Error('result not found');
 };
 
-exports.run = run;
+export {run};

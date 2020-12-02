@@ -17,7 +17,7 @@ readline.question('Pick a Day!\n', async (day: string) => {
     const input = await fs.readFileSync(path.resolve(__dirname, `./day${chosenDay}/input.txt`), "utf8");
     console.log(`Result:\n\n${pickedDay.run(input)}`);
   } catch (e) {
-    console.log(`I Couldn't find that day! Maybe I've been too lazy to code it yet!\n\n`, e);
+    console.log(`Error occurred running solution\n\n`, e);
   }
   readline.close();
 });
