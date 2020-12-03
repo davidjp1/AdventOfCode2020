@@ -3,19 +3,20 @@ const run = (input: string): number => {
   const trees = input.split('\n').map(treeRow => treeRow.split('').map(char => char === '#'));
   const treeTemplateLength = trees[0].length;
 
-  const downStepSize = 1;
-  const rightStepSize = 3;
-  let currentX = 0;
-  let treesHit = 0;
-  for(let currentY = 0; currentY < trees.length; currentY = currentY + downStepSize){
-    if(trees[currentY][currentX]){
-      treesHit++;
+  const navigateSlopes = (rightStepSize: number, downStepSize: number): number => {
+    let currentX = 0;
+    let treesHit = 0;
+    for (let currentY = 0; currentY < trees.length; currentY = currentY + downStepSize) {
+      if (trees[currentY][currentX]) {
+        treesHit++;
+      }
+      const newRight = currentX + rightStepSize;
+      currentX = (newRight >= treeTemplateLength) ? newRight - treeTemplateLength : newRight;
     }
-    const newRight = currentX + rightStepSize;
-    currentX = (newRight >= treeTemplateLength) ? newRight - treeTemplateLength : newRight;
+    return treesHit;
   }
 
-  return treesHit;
+  return navigateSlopes(1, 1) * navigateSlopes(3, 1) * navigateSlopes(5, 1) * navigateSlopes(7, 1) * navigateSlopes(1, 2);
 };
 
 export { run };
