@@ -23,6 +23,7 @@ const run = (input : string): number => {
   const boardingPasses: string[] = input.replace(/\r/g, '').split('\n');
   const seatIds = boardingPasses.map(getSeatId);
   const maxSeat = seatIds.sort((a,b) => b - a)[0];
+  // @ts-ignore
   return [...Array(maxSeat).keys()].filter(i => !seatIds.includes(i)).sort((a,b) => b - a)[0];
 }
 export {run}
