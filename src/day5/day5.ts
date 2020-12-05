@@ -2,9 +2,6 @@ const partitioner = (leftSplitChar: string, rightSplitChar: string, start: numbe
   if(start === end){
     return start;
   }
-  if(splits.length === 0){
-    throw Error('Partitioner ran out of characters before reaching a single position');
-  }
   const splitChar = splits.shift();
   if(splitChar === leftSplitChar){
     return partitioner(leftSplitChar, rightSplitChar, start, end - Math.ceil((end - start)/2), splits);
