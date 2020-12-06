@@ -1,11 +1,9 @@
-import { format } from "path";
-
 const run = (input: string): number => {
   const getAnsweredQuestionCount = (form: string[]): number => {
     const numberOfPeople = form.length;
     // A dict mappings of question answered to number of occurrences
     const answersDict: { [question: string]: number } = {};
-    form.forEach(personsAnswers => personsAnswers.split('').forEach(answer => {
+    form.forEach(personAnswers => personAnswers.split('').forEach(answer => {
       if(!answersDict[answer]){
         answersDict[answer] = 1;
       } else {
