@@ -26,22 +26,25 @@ const run = (input: string): number => {
     }
   }
 
-  const getBagContents = (rule: Rule, rules: Rule[]): string[] => {
+  const getBagContents = (rule: Rule, rules: Rule[], everyChildDisabled = false): string[] => {
     const bags: string[] = [];
     Object.entries(rule.children).forEach(([color, count]) => {
-      for(let i = 0; i < count; i++){
+      for (let i = 0; i < (everyChildDisabled ? 1 : count); i++) {
         bags.push(color);
-      }
-      const childRule = rules.find(rule => rule.color === color);
-      if(childRule){
-        bags.push(...getBagContents(childRule, rules));
+        const childRule = rules.find(rule => rule.color === color);
+        if (childRule) {
+          bags.push(...getBagContents(childRule, rules, everyChildDisabled));
+        }
       }
     });
     return bags;
   }
 
   const rules: Rule[] = input.replace(/\r/g, '').split('\n').map(parseRule);
-  const filledBags: string[][] = rules.map(rule => getBagContents(rule, rules));
-  return filledBags.filter(a => a.includes('shiny gold')).length;
+  const filledBags: string[][] = rules.map(rule => getBagContents(rule, rules, true));
+  console.log('part1: ' + filledBags.filter(a => a.includes('shiny gold')).length);
+
+  //@ts-ignore
+  return getBagContents(rules.find(rule => rule.color === 'shiny gold'), rules).length;
 }
 export { run }
