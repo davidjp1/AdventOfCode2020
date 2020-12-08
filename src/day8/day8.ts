@@ -16,14 +16,34 @@ const run = (input: string): number => {
     }
   });
 
-  return execute(linesOfCode, 0, 0);
-}
-const execute = (code: LOC[], currentLine: number, acc: number): number => {
-  const loc = code[currentLine];
-  console.log(`${loc.action}  ${loc.value >= 0 ? '+' : ''}${loc.value}  |   ${acc}`);
-  if (loc.numberOfTimesRan === 1) {
-    return acc;
+  console.log('Part 1=', execute(linesOfCode, 0, 0).acc);
+  //reset
+  linesOfCode.map(a => { a.numberOfTimesRan = 0 });
+  //brute force swapping nops and jmps
+  for (let i = 0; i < linesOfCode.length; i++) {
+    if (['jmp', 'nop'].includes(linesOfCode[i].action)) {
+      const cloneLocs: LOC[] = JSON.parse(JSON.stringify(linesOfCode));
+      cloneLocs[i].action = (cloneLocs[i].action === 'jmp') ? 'nop' : 'jmp';
+      const result = execute(cloneLocs, 0, 0);
+      if (result.success) {
+        return result.acc;
+      }
+    }
   }
+  return -1;
+}
+
+const execute = (code: LOC[], currentLine: number, acc: number): { acc: number, success: boolean } => {
+  const loc = code[currentLine];
+  if (loc === undefined) {
+    //terminate when we run out of lines
+    return { acc: acc, success: true };
+  }
+  if (loc.numberOfTimesRan === 1) {
+    //terminate on repeats
+    return { acc: acc, success: false };
+  }
+  // console.log(`${loc.action}  ${loc.value >= 0 ? '+' : ''}${loc.value}  |   ${acc}`);
   code[currentLine].numberOfTimesRan++;
   switch (loc.action) {
     case 'nop':
