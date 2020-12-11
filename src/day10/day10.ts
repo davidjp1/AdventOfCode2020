@@ -4,7 +4,6 @@ const getRoutes = (adapters: number[], targetVoltage: number): number => {
   permutations[2] = 1;
   for (const adapter of adapters.filter(a => a !== targetVoltage)) {
     const i = adapter + 2;
-    console.log(i, permutations[i-1], permutations[i-2], permutations[i-3]);
     permutations[i] = permutations[i - 1] + permutations[i - 2] + permutations[i - 3];
   }
   return permutations[permutations.length - 1];
