@@ -4,48 +4,29 @@ enum Seat {
   OCCUPIED = '#',
   FLOOR = '.'
 }
-const toSeatEnum = (char: string): Seat => {
-  return (char as Seat);
+
+const occupiedVisibleSeatSearch = (planeState: Seat[][], currentX: number, currentY: number, xIncrement: number, yIncrement: number): number => {
+  const nextX = currentX + xIncrement;
+  const nextY = currentY + yIncrement;
+  if(nextY < planeState.length && nextY >= 0 && nextX < planeState[0].length && nextX >= 0){
+    switch(planeState[nextY][nextX]){
+        case Seat.EMPTY: return 0;
+        case Seat.OCCUPIED: return 1;
+        default: return occupiedVisibleSeatSearch(planeState, nextX, nextY, xIncrement, yIncrement);
+    }
+  }
+  return 0;
 }
 
-const adjacentSeats = (planeState: Seat[][], xPos: number, yPos: number) : Seat[] => {
-  const adjacentSeats: Seat[] = [];
-  const maxY = planeState.length - 1;
-  const maxX = planeState[0].length - 1;
-
-  //West
-  if(xPos > 0){
-    adjacentSeats.push(planeState[yPos][xPos - 1]);
-  }
-  //South
-  if(yPos > 0){
-    adjacentSeats.push(planeState[yPos - 1][xPos]);
-  }
-  //East
-  if(xPos < maxX){
-    adjacentSeats.push(planeState[yPos][xPos + 1]);
-  }
-  //North
-  if(yPos < maxY){
-    adjacentSeats.push(planeState[yPos + 1][xPos]);
-  }
-  //SouthWest
-  if(xPos > 0 && yPos > 0){
-    adjacentSeats.push(planeState[yPos - 1][xPos - 1]);
-  }
-  //NorthEast
-  if(xPos < maxX && yPos < maxY){
-    adjacentSeats.push(planeState[yPos + 1][xPos + 1]);
-  }
-  //SouthEast
-  if(xPos < maxX && yPos > 0){
-    adjacentSeats.push(planeState[yPos - 1][xPos + 1]);
-  }
-  //NorthWest
-  if(xPos > 0 && yPos < maxY){
-    adjacentSeats.push(planeState[yPos + 1][xPos - 1]);
-  }
-  return adjacentSeats;
+const adjacentOccupiedSeatsCount = (planeState: Seat[][], xPos: number, yPos: number): number => {
+  return occupiedVisibleSeatSearch(planeState, xPos, yPos, -1, 0) +
+    occupiedVisibleSeatSearch(planeState, xPos, yPos, 0, -1) +
+    occupiedVisibleSeatSearch(planeState, xPos, yPos, 0, 1) +
+    occupiedVisibleSeatSearch(planeState, xPos, yPos, 1, 0) +
+    occupiedVisibleSeatSearch(planeState, xPos, yPos, -1, -1) +
+    occupiedVisibleSeatSearch(planeState, xPos, yPos, 1, 1) +
+    occupiedVisibleSeatSearch(planeState, xPos, yPos, 1, -1) +
+    occupiedVisibleSeatSearch(planeState, xPos, yPos, -1, 1);
 }
 
 /*
@@ -57,11 +38,11 @@ const updatePlaneState = (planeState: Seat[][]) : Seat[][] => {
   const newPlaneState: Seat[][] = JSON.parse(JSON.stringify(planeState));
   for(let y = 0; y < planeState.length; y++){
     for(let x = 0; x < planeState[0].length; x++){
-      const occupiedCount = adjacentSeats(planeState, x, y).filter(seat => seat === Seat.OCCUPIED).length;
+      const occupiedCount = adjacentOccupiedSeatsCount(planeState, x, y);
       if(occupiedCount === 0 && planeState[y][x] === Seat.EMPTY){
         newPlaneState[y][x] = Seat.OCCUPIED;
       }
-      if(occupiedCount >= 4 && planeState[y][x] === Seat.OCCUPIED){
+      if(occupiedCount >= 5 && planeState[y][x] === Seat.OCCUPIED){
         newPlaneState[y][x] = Seat.EMPTY;
       }
     }
@@ -69,23 +50,16 @@ const updatePlaneState = (planeState: Seat[][]) : Seat[][] => {
   return newPlaneState;
 }
 
-const getOccupiedSeatCount = (planeState: Seat[][]): number => {
-  let occupiedCount = 0;
-  planeState.forEach(row => row.forEach(seat => {
-    if (seat === Seat.OCCUPIED) {
-      occupiedCount++;
-    }
-  }));
-  return occupiedCount;
-}
 const run = (input: string): number => {
-  let planeState: Seat[][] = input.replace(/\r/g, '').split('\n').map(line => line.split('').map(char => toSeatEnum(char)));
+  // Code for part 2 only included today, if you want to see the part 1 solution you'll have to go into the git history
+
+  let planeState: Seat[][] = input.replace(/\r/g, '').split('\n').map(line => line.split('').map(char => char as Seat));
 
   while(true){
     //planeState.forEach(row => console.log(row.join('')));
     const nextPlaneState = updatePlaneState(planeState);
     if(JSON.stringify(nextPlaneState) === JSON.stringify(planeState)){
-      return getOccupiedSeatCount(planeState);
+      return planeState.flat().filter(seat => seat === Seat.OCCUPIED).length;
     }
     planeState = nextPlaneState;
   }
