@@ -1,9 +1,4 @@
-const ofNullable = <T>(nullable: T | null): T => {
-  if (nullable) {
-    return nullable;
-  }
-  throw Error('Object was falsy');
-}
+import { ofNullable } from "../util";
 
 const run = (input: string): number => {
 

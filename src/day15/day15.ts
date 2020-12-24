@@ -1,18 +1,27 @@
 const run = (input: string): number => {
   const playGame = (sequence: number[], target: number): number => {
-    const turnNumber = sequence.length + 1;
-    const lastNumber = sequence[sequence.length - 1];
-    const lastSpokenOnTurn = sequence.slice(0, sequence.length - 1).lastIndexOf(lastNumber);
-    const nextToSpeak = lastSpokenOnTurn === -1 ? 0 : sequence.length - (lastSpokenOnTurn + 1);
-    
-    if(turnNumber === target){
-      return nextToSpeak;
+    const spoken: { [lastSpoken: number]: number } = {};
+    //Add all except the last one
+    for (let i = 0; i < sequence.length - 1; i++) {
+      spoken[sequence[i]] = i + 1;
     }
-    sequence.push(nextToSpeak);
-    return playGame(sequence, target);
+    let currSpoken = sequence[sequence.length - 1];
+    for (let turn = sequence.length; turn < target; turn++) {
+      if (!spoken[currSpoken]) {
+        spoken[currSpoken] = turn;
+        currSpoken = 0;
+      }
+      else {
+        const lastTimeSpoken = spoken[currSpoken];
+        spoken[currSpoken] = turn;
+        currSpoken = turn - lastTimeSpoken;
+      }
+    }
+    return currSpoken;
   }
 
   const sequence = input.split(',').map(a => parseInt(a));
-  return playGame(sequence, 2020);
+  console.log(`Part 1 = ${playGame(sequence, 2020)}`)
+  return playGame(sequence, 30000000);
 }
 export { run }
