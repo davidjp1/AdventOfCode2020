@@ -4,4 +4,10 @@ const ofNullable = <T>(nullable: T | null | undefined, errorMessage = 'Object wa
   }
   throw Error(errorMessage);
 }
-export {ofNullable};
+const intersectionOfMultiple = <T>(...arrs: T[][]): T[] => {
+  return arrs.reduce((a,b) => intersection(a,b));
+}
+const intersection = <T>(arrA: T[], arrB: T[]) : T[] => {
+  return arrA.filter(a => arrB.includes(a));
+}
+export {ofNullable, intersection, intersectionOfMultiple};
